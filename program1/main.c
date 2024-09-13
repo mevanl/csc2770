@@ -80,14 +80,33 @@ void decimalToHex(int decimal)
   printHexInReverse(hex, i);
 }
 
-// Function to convert binary to decimal (placeholder)
+// Convert binary to decimal
 void binaryToDecimal(char *binary)
 {
   printf("Converting binary %s to decimal...\n", binary);
-  // Conversion logic will go here
+  
+  int decimal = 0;
 
-  // temp
-  int decimal;
+  
+  int bits = 0;
+  while (binary[bits] != '\0')
+  {
+    bits++;                               // count bit count
+  }
+
+  int exponent = bits - 1;
+  int value = 0; 
+
+  // TA SAID ASSUME UNSIGNED INPUT
+  for (int i = 0; i < bits; i++)
+  {
+    if (binary[i] == '1')                 // if bit is 1
+    {              
+      decimal += 1 << exponent;           // get decimal amount at that bit location
+    }
+
+    exponent--;                           // as we go right in memory, exponent lowers
+  }
 
   printf("Decimal: %d\n", decimal);
 }
@@ -146,21 +165,20 @@ int main(int argc, char *argv[])
   // Extract the flag and value from arguments
   // Check which flag was provided and call the appropriate function
   char option = argv[1][1];
-  char* number = argv[2];
 
   switch (option)
   {
   case 'd':
-    decimalToBinary(atoi(number));
-    //decimalToHex(number + '0');
+    decimalToBinary(atoi(argv[2]));
+    //decimalToHex(atoi(argv[2]));
     break;
   case 'b':
-    binaryToDecimal(number);
-    binaryToHex(number);
+    binaryToDecimal(argv[2]);
+    //binaryToHex(argv[2]);
     break;
   case 'h':
-    hexToBinary(number);
-    hexToDecimal(number);
+    hexToBinary(argv[2]);
+    hexToDecimal(argv[2]);
     break;
   default:
     return 1;
