@@ -21,63 +21,40 @@ void printHexInReverse(char hex[], int length)
   printf("\n");
 }
 
-// Function to convert decimal to binary (placeholder)
+// Convert decimal to binary
 void decimalToBinary(int decimal)
 {
   printf("Converting decimal %d to binary...\n", decimal);
-  // Conversion logic will go here
-
-  // Set up our 32-bit binary number 
-  char binary[33];    
-  binary[32] = '\0';              // Null terminate the string
-  for (int i = 1; i < 32; i++)    // fill it up with '0'
+   
+  char binary[33];                    // 32-bit binary number
+  binary[32] = '\0';                  // Null terminate the string
+  for (int i = 1; i < 32; i++)        // fill it up with '0'
   {
     binary[i] = '0';
   }
   
-  // set up number that will add up to our decimal
-  long long total = 0;
+  int total = 0;                      // will add up to our decimal 
   if (decimal < 0)
   {
     binary[0] = '1';
-    total = -2147483648 ;    // initialize to negative
+    total = -2147483648 ;             // initialize to min so can add to value
   } 
   else 
   {
     binary[0] = '0';
   }
-  
-  // do the conversion 
+
   int i = 1;
+
 
   while (total != decimal)
   {
     int exponent = 32 - i; 
-    int value = 1 << exponent - 1;
+    int value = 1 << exponent - 1;  // get the correct decimal value for a given bit
 
-    //printf("\niteration: %d\nvalue: %d\nexponent: %d\ntotal: %d\n", i, value, exponent, total);
-  
-    // // For positive values
-    // if (decimal > 0 && value + total <= decimal) 
-    // {
-    //   binary[i] = '1';
-    //   total += value; 
-    //   i++;
-    //   continue;
-    // }
-
-    // // For negative values 
-    // if (decimal < 0 && value + total <= decimal)
-    // {
-    //   binary[i] = '1';
-    //   total += value;
-    //   i++;
-    //   continue;
-    // }
-
-    if (value + total <= decimal) 
-    {
-      binary[i] = '1';
+    if (value + total <= decimal)   // if total + value gets us closer
+    {                               // to our desired decimal number
+      binary[i] = '1';              // flip the bit
       total += value; 
       i++;
       continue;
@@ -85,7 +62,6 @@ void decimalToBinary(int decimal)
 
     i++;
   }
-
 
   printf("Binary: %s\n", binary);
 }
