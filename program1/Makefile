@@ -1,9 +1,9 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -pedantic
-SOURCES =  main.c
+SOURCES =  program1.c
 
-all: lab1
+all: program1
 
-lab1: main.c
-	$(CC) $(CFLAGS) $(SOURCES) -o main 
+program1: program1.c
+	$(CC) $(CFLAGS) $(SOURCES) -o program1
 
