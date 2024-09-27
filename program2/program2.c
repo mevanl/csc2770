@@ -3,6 +3,8 @@
 #include <stdbool.h>
 #include <time.h>
 
+#include "malloc_functions.h"
+
 #define MEMORY_SIZE 256
 #define LARGE_MEMORY_SIZE (1 * 1024 * 1024) // 1 MB
 #define BAD_BLOCK 'X'
@@ -38,11 +40,26 @@ void markBadBlocks(char *memory, size_t size, size_t badBlockCount) {
     }
 }
 
+
+
+
+
 // Skeleton function: Allocate memory dynamically, skipping bad blocks
 void* myMalloc(size_t size) {
     // STUDENTS: Implement logic to allocate memory dynamically, ensuring that you skip over bad blocks
+
+
+    if (validate_size(size, MEMORY_SIZE) == false) { return NULL; }
+
+
+
+    
+    
     return NULL; // Placeholder return value
 }
+
+
+
 
 // Skeleton function: Free the allocated memory
 void myFree(void *ptr) {
