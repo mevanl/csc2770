@@ -4,4 +4,6 @@
 #include <stdbool.h>
 
 
-bool validate_size(size_t size, size_t MEMORY_SIZE);
+#define BAD_BLOCK 'X'
+
+bool isBadBlock(void *ptr);

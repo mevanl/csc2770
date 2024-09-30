@@ -48,12 +48,76 @@ void markBadBlocks(char *memory, size_t size, size_t badBlockCount) {
 void* myMalloc(size_t size) {
     // STUDENTS: Implement logic to allocate memory dynamically, ensuring that you skip over bad blocks
 
+    // check size bounds 
+    // does it need to be freeList->size ? 
+    if (size == 0 || size > MEMORY_SIZE - sizeof(Block))
+    {
+        return NULL;
+    }
 
-    if (validate_size(size, MEMORY_SIZE) == false) { return NULL; }
+    Block *current = freeList;
 
+    while (current != NULL) 
+    {
 
+        // is this block free and big enough?
+        if (current->free && current->size >= size)
+        {
+            bool badBlockCheck = false; 
 
-    
+            // find the bad blocks 
+            for (size_t i = 0; i < size; i++) 
+            {
+                // this fun line of code here does:
+                // cast the value from void * to char * since 
+                // bad block is char
+                //
+                // then + 1 will skip the struct header info
+                // then + i for incrementing 
+                if (isBadBlock(((char *)(current + 1) + i)))
+                {
+                    badBlockCheck = true;
+                    break;
+                }
+
+                // if no bad blocks 
+                if (!badBlockCheck)
+                {
+                    // mark as used / "allocate"
+                    current->free = false;
+
+                    size_t extraSpace = current->size - size - sizeof(Block);
+
+                    current->size = size; 
+
+                    // if we did not use all the space for our allocation:
+                    if (extraSpace > 0)
+                    {
+                        // create new block
+                        Block *newBlock = (Block *)((char *)(current + 1) + size);
+                        newBlock->size = extraSpace;
+                        newBlock->free = true;
+                        newBlock->next = current->next; 
+                    }
+                    // if we used all the space
+                    else 
+                    {
+                        if (current->next != NULL) 
+                        {
+                            Block *nextBlock = current->next;
+                            current->size += sizeof(Block);
+                            current->next = nextBlock->next;
+                        }
+                    }
+                    
+                    // return pointer after block struct info
+                    return (char *)(current + 1); 
+                }
+            }
+
+            current = current->next;
+        }
+    }    
     
     return NULL; // Placeholder return value
 }
@@ -64,7 +128,32 @@ void* myMalloc(size_t size) {
 // Skeleton function: Free the allocated memory
 void myFree(void *ptr) {
     // STUDENTS: Implement logic to free the allocated memory
+
+    // no deallocation needed
+    if (ptr == NULL)
+    {
+        return;
+    }
+
+    // cast to block without the struct info
+    Block *current = (Block *)ptr - 1; 
+    // mark it free
+    // data doesnt need to be removed from memory
+    // just marked as can be overwritten
+    current->free = true;
+
+    // restructure the memory as one big free section 
+    Block *next = current->next;
+    while (next != NULL && next->free)
+    {
+        current->size += sizeof(Block) + next->size;
+        current->next = next->next;
+        next = current->next; 
+    }
 }
+
+
+
 
 int main(int argc, char *argv[]) {
     if (argc != 2) {
